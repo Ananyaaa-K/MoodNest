@@ -14,6 +14,11 @@ MoodNest is a minimalist, Django-based web application designed to help you take
 *   **History**: View your past moods and habits to spot patterns.
 *   **Minimalist UI**: calm, beautiful interface with dark mode support.
 
+## 📚 Documentation
+- [**Architecture**](ARCHITECTURE.md): System design and data flow.
+- [**Setup Guide**](SETUP.md): Detailed instructions for local development.
+- [**Contributing**](CONTRIBUTING.md): How to get involved.
+
 ## 🛠️ Tech Stack
 
 *   **Backend**: Python 3, Django 5

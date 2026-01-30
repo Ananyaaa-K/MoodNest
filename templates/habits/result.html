@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if error %}
+<div class="calm-card rounded-3xl p-10 text-center animate-in fade-in zoom-in duration-500">
+    <div class="text-slate-500 dark:text-slate-400 mb-4">
+        <i class="fa-solid fa-circle-exclamation text-4xl"></i>
+    </div>
+    <h2 class="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-4">{{ error }}</h2>
+    <a href="{% url 'home' %}"
+        class="inline-block bg-slate-800 text-white rounded-2xl py-3 px-6 font-semibold hover:opacity-90 transition">
+        Go Back Home
+    </a>
+</div>
+{% elif habit %}
 <div class="calm-card rounded-3xl p-10 text-center animate-in fade-in zoom-in duration-500">
     <div
         class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
@@ -35,6 +47,7 @@
         </a>
     </div>
 </div>
+{% endif %}
 
 <div id="successMsg" class="hidden mt-8 text-center animate-bounce">
     <p class="text-emerald-600 font-semibold">You did something small. That counts. ✨</p>
