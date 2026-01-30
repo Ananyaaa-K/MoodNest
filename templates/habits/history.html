@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-8 flex justify-between items-center">
+    <h1 class="text-3xl font-semibold text-slate-800 dark:text-white">Your Journey</h1>
+    <a href="{% url 'home' %}" class="text-slate-500 hover:text-slate-800 transition">
+        <i class="fa-solid fa-arrow-left mr-1"></i> Back
+    </a>
+</div>
+
+<div class="space-y-4">
+    {% for log in logs %}
+    <div
+        class="calm-card rounded-2xl p-5 flex justify-between items-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <div>
+            <div class="flex items-center mb-1">
+                <span class="text-xl mr-2">
+                    {% if log.mood == 'tired' %}🥱{% elif log.mood == 'anxious' %}😰{% elif log.mood == 'stressed'
+                    %}😫{% elif log.mood == 'lazy' %}🦥{% elif log.mood == 'sad' %}😢{% else %}😐{% endif %}
+                </span>
+                <span class="font-bold text-slate-700 dark:text-slate-200 capitalize text-sm tracking-wide">{{ log.mood
+                    }}</span>
+                <span class="mx-2 text-slate-300">•</span>
+                <span class="text-slate-400 text-xs">{{ log.timestamp|date:"M d, g:i A" }}</span>
+            </div>
+            <p class="text-slate-600 dark:text-slate-300 italic">"{{ log.habit_text }}"</p>
+        </div>
+        <div class="text-emerald-500 text-xl">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center py-20 bg-white/50 rounded-3xl border-2 border-dashed border-slate-200">
+        <p class="text-slate-400">Your history is empty. Start by choosing a mood!</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center mb-10">
+    <h1 class="text-4xl font-semibold text-slate-800 dark:text-white mb-2 tracking-tight">How are you feeling?</h1>
+    <p class="text-slate-500 dark:text-slate-400">Type your mood or pick an emoji below.</p>
+
+    {% if quote %}
+    <div
+        class="mt-6 p-4 bg-white/50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-sm mx-auto">
+        <p class="text-sm text-slate-600 dark:text-slate-300 italic">"{{ quote }}"</p>
+    </div>
+    {% endif %}
+
+    {% if user.is_authenticated and streak > 0 %}
+    <div
+        class="mt-4 inline-flex items-center bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+        <i class="fa-solid fa-fire mr-1"></i> {{ streak }} Day Streak!
+    </div>
+    {% endif %}
+</div>
+
+<div class="mb-10">
+    <form action="{% url 'get_habit' %}" method="get" class="relative group">
+        <input type="text" name="mood_text" placeholder="I'm feeling a bit..." style="padding-left: 4.5rem;"
+            class="w-full bg-white dark:bg-slate-800 dark:text-white border-2 border-transparent focus:border-slate-800 dark:focus:border-slate-100 rounded-3xl p-6 shadow-lg outline-none transition-all duration-300">
+        <div
+            class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-slate-800 dark:group-focus-within:text-white transition">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <button type="submit"
+            class="absolute right-4 top-1/2 -translate-y-1/2 bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 px-6 py-2 rounded-2xl font-bold text-sm tracking-wide opacity-0 group-focus-within:opacity-100 transition-all duration-300">
+            Suggest
+        </button>
+    </form>
+</div>
+
+<div class="grid grid-cols-2 gap-4">
+    {% for val, label in moods %}
+    <a href="{% url 'get_habit' %}?mood={{ val }}"
+        class="mood-btn calm-card rounded-2xl p-6 text-center cursor-pointer hover:shadow-lg">
+        <div class="text-3xl mb-2">
+            {% if val == 'tired' %}🥱
+            {% elif val == 'anxious' %}😰
+            {% elif val == 'stressed' %}😫
+            {% elif val == 'lazy' %}🦥
+            {% elif val == 'sad' %}😢
+            {% else %}😐
+            {% endif %}
+        </div>
+        <span class="font-medium text-slate-700 dark:text-slate-200 capitalize">{{ label }}</span>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

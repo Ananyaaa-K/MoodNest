@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodNest - Habit Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#1a202c',
+                        darkCard: '#2d3748',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        .calm-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            transition: transform 0.3s ease, background-color 0.5s ease;
+        }
+
+        .dark .calm-card {
+            background: rgba(45, 55, 72, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+        }
+
+        .mood-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mood-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(0.95);
+        }
+
+        /* Global Form Styling */
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark input[type="text"],
+        .dark input[type="password"],
+        .dark input[type="email"] {
+            background: #1e293b;
+            border-color: #334155;
+            color: white;
+        }
+
+        input:focus {
+            border-color: #1e293b;
+            box-shadow: 0 0 0 4px rgba(30, 41, 59, 0.05);
+        }
+
+        .dark input:focus {
+            border-color: #f8fafc;
+            box-shadow: 0 0 0 4px rgba(248, 250, 252, 0.05);
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen flex flex-col items-center justify-center p-4 bg-[#f0f7f4] dark:bg-[#0f172a] text-[#2d3748] dark:text-[#f8fafc]">
+
+    <header class="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-10">
+        <div class="flex items-center space-x-4">
+            <a href="{% url 'home' %}" class="font-bold text-xl tracking-tighter">MOODNEST</a>
+            <button id="themeToggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition">
+                <i class="fa-solid fa-moon dark:hidden"></i>
+                <i class="fa-solid fa-sun hidden dark:block"></i>
+            </button>
+        </div>
+
+        <nav class="flex items-center space-x-6 text-sm font-medium">
+            {% if user.is_authenticated %}
+            <a href="{% url 'history' %}" class="hover:underline">History</a>
+            <form action="{% url 'logout' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="hover:underline">Logout</button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}" class="hover:underline">Login</a>
+            <a href="{% url 'signup' %}"
+                class="bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 px-4 py-2 rounded-xl transition hover:opacity-90">Get
+                Started</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="max-w-md w-full mt-20">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="mt-8 text-slate-400 text-sm">
+        MoodNest &bull; Micro-habits for a better day
+    </footer>
+
+    <script>
+        // Dark Mode Logic
+        const themeToggle = document.getElementById('themeToggle');
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        });
+
+        // Gentle Sound Synthesis (Chime)
+        window.playChime = () => {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+            osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5); // A4
+
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
+        };
+    </script>
+</body>
+
+</html>

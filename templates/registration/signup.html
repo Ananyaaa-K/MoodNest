@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="calm-card rounded-3xl p-10 shadow-xl dark:text-white">
+    <h2 class="text-3xl font-semibold text-slate-800 dark:text-white mb-8 text-center">Join MoodNest</h2>
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="space-y-1">
+            <label class="text-sm font-semibold text-slate-600 dark:text-slate-300 block ml-1">{{ field.label }}</label>
+            <div class="relative">
+                {{ field }}
+            </div>
+            {% if field.help_text %}
+            <p class="text-[10px] text-slate-400 dark:text-slate-500 leading-tight px-1">{{ field.help_text|safe }}</p>
+            {% endif %}
+            {% for error in field.errors %}
+            <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <button type="submit"
+            class="w-full bg-slate-800 dark:bg-slate-100 dark:text-slate-900 text-white rounded-2xl py-4 font-bold hover:opacity-90 transition shadow-lg mt-4">
+            Create Account
+        </button>
+    </form>
+    <p class="text-center mt-8 text-slate-500 dark:text-slate-400 text-sm">
+        Already have an account? <a href="{% url 'login' %}"
+            class="text-slate-800 dark:text-white font-bold underline">Login</a>
+    </p>
+</div>
+
+{% endblock %}
